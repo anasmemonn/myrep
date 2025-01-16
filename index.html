@@ -73,7 +73,6 @@
       animation: jarEntrance 1s ease-out;
     }
 
-    /* Keyframe Animation for Jar */
     @keyframes jarEntrance {
       from {
         transform: scale(0.8);
@@ -85,7 +84,7 @@
       }
     }
 
-    /* Cookies List */
+    /* Cookie List and Styles */
     .cookies-list {
       text-align: left;
       max-height: 100%;
@@ -93,7 +92,6 @@
       overflow-y: auto;
     }
 
-    /* Individual Cookie Styles */
     .cookie {
       background: #fff3cd;
       border: 2px dashed #ff6f61;
@@ -120,7 +118,7 @@
       border: none;
       color: #d9554e;
       font-size: 1rem;
-      position: center;
+      position: absolute;
       top: 1px;
       right: 5px;
       cursor: pointer;
@@ -130,30 +128,6 @@
     .delete-btn:hover {
       transform: scale(1.2);
       color: #ff6f61;
-    }
-
-    .delete-btn:active {
-      transform: scale(1);
-      color: #d9554e;
-    }
-
-    button:active {
-      background: #c13d35;
-      tab-size: 0;
-    }
-
-    /* Scrollbar Styling */
-    .jar::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .jar::-webkit-scrollbar-thumb {
-      background: #ff6f61;
-      border-radius: 10px;
-    }
-
-    .jar::-webkit-scrollbar-track {
-      background: #ffe3d7;
     }
 
     /* Form Styles */
@@ -187,24 +161,7 @@
       transition: background 0.3s, transform 0.2s;
     }
 
-    /* Light and Dark Mode Toggle */
-    .mode-toggle {
-      background-color: #ff6f61;
-      border: none;
-      color: white;
-      font-size: 1.1rem;
-      padding: 10px 15px;
-      border-radius: 5px;
-      margin-top: 20px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .mode-toggle:hover {
-      background-color: #d9554e;
-    }
-
-    /* Keyframe Animation for Cookie */
+    /* Keyframe for Cookie FadeIn */
     @keyframes fadeIn {
       from {
         transform: translateY(-10px);
@@ -216,6 +173,28 @@
       }
     }
 
+    /* Password Toggle Styles */
+    .password-container {
+      position: relative;
+      width: 100%;
+    }
+
+    #password-input {
+      padding: 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #toggle-password {
+      position: absolute;
+      right: -30px;
+      top: -3px;
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -225,20 +204,21 @@
     <!-- Password Form -->
     <div id="password-section">
       <form id="password-form">
-        <input type="password" id="password-input" placeholder="Enter Password" required>
+        <div class="password-container">
+          <input type="password" id="password-input" placeholder="Enter Password" required>
+          <button type="button" id="toggle-password" class="show-password">👁️</button>
+        </div>
         <button type="submit">Submit</button>
       </form>
     </div>
 
     <!-- Cookie Jar Section -->
     <div id="cookie-jar" style="display: none;">
-      <!-- Input Area Above the Jar Section -->
       <form id="cookieForm">
         <input type="text" id="cookieInput" placeholder="Enter your achievement..." required />
         <button type="submit">Add Cookie 🍪</button>
       </form>
 
-      <!-- Jar Section with Cookie List -->
       <div class="jar">
         <div class="cookies-list" id="cookiesList"></div>
       </div>
@@ -251,51 +231,46 @@
       const passwordInput = document.getElementById('password-input');
       const cookieJar = document.getElementById('cookie-jar');
       const passwordSection = document.getElementById('password-section');
-
+      const togglePassword = document.getElementById('toggle-password');
+    
       const cookieForm = document.getElementById('cookieForm');
       const cookieInput = document.getElementById('cookieInput');
       const cookiesList = document.getElementById('cookiesList');
-
-      // Load cookies from localStorage
+    
       const loadCookies = () => {
         const cookies = JSON.parse(localStorage.getItem('cookies')) || [];
         cookies.forEach(cookie => addCookieToDOM(cookie));
       };
-
-      // Save cookies to localStorage
+    
       const saveCookie = (cookie) => {
         const cookies = JSON.parse(localStorage.getItem('cookies')) || [];
         cookies.push(cookie);
         localStorage.setItem('cookies', JSON.stringify(cookies));
       };
-
-      // Remove cookie from localStorage
+    
       const removeCookieFromStorage = (cookie) => {
         let cookies = JSON.parse(localStorage.getItem('cookies')) || [];
         cookies = cookies.filter(item => item !== cookie);
         localStorage.setItem('cookies', JSON.stringify(cookies));
       };
-
-      // Add cookie to DOM
+    
       const addCookieToDOM = (cookie) => {
         const cookieDiv = document.createElement('div');
         cookieDiv.classList.add('cookie');
         
-        // Create and append the delete button
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('delete-btn');
         deleteButton.textContent = '✖';
         deleteButton.addEventListener('click', () => {
           cookiesList.removeChild(cookieDiv);
-          removeCookieFromStorage(cookie); // Remove cookie from local storage
+          removeCookieFromStorage(cookie);
         });
         
         cookieDiv.innerHTML = cookie;
         cookieDiv.appendChild(deleteButton);
         cookiesList.appendChild(cookieDiv);
       };
-
-      // Handle password form submission
+    
       passwordForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const enteredPassword = passwordInput.value.trim();
@@ -307,16 +282,21 @@
           alert('Incorrect password!');
         }
       });
-
-      // Handle cookie form submission
+    
       cookieForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newCookie = cookieInput.value.trim();
         if (newCookie) {
           addCookieToDOM(newCookie);
           saveCookie(newCookie);
-          cookieInput.value = ''; // Clear input field
+          cookieInput.value = '';
         }
+      });
+    
+      togglePassword.addEventListener('click', () => {
+        const fieldType = passwordInput.type === 'password' ? 'text' : 'password';
+        passwordInput.type = fieldType;
+        togglePassword.textContent = fieldType === 'password' ? '👁️' : '🙈';
       });
     });
   </script>
