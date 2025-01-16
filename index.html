@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+    <link rel="icon" href=cokie.jpg type="image/jpg">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,48 +174,15 @@
         opacity: 1;
       }
     }
-
-    /* Password Toggle Styles */
-    .password-container {
-      position: relative;
-      width: 100%;
-    }
-
-    #password-input {
-      padding: 10px;
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    #toggle-password {
-      position: absolute;
-      right: -30px;
-      top: -3px;
-      border: none;
-      background: transparent;
-      font-size: 18px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
+    
   <div class="container">
     <h1>🎯 My Cookie Jar</h1>
-    
-    <!-- Password Form -->
-    <div id="password-section">
-      <form id="password-form">
-        <div class="password-container">
-          <input type="password" id="password-input" placeholder="Enter Password" required>
-          <button type="button" id="toggle-password" class="show-password">👁️</button>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
 
     <!-- Cookie Jar Section -->
-    <div id="cookie-jar" style="display: none;">
+    <div id="cookie-jar">
       <form id="cookieForm">
         <input type="text" id="cookieInput" placeholder="Enter your achievement..." required />
         <button type="submit">Add Cookie 🍪</button>
@@ -227,12 +196,6 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      const passwordForm = document.getElementById('password-form');
-      const passwordInput = document.getElementById('password-input');
-      const cookieJar = document.getElementById('cookie-jar');
-      const passwordSection = document.getElementById('password-section');
-      const togglePassword = document.getElementById('toggle-password');
-    
       const cookieForm = document.getElementById('cookieForm');
       const cookieInput = document.getElementById('cookieInput');
       const cookiesList = document.getElementById('cookiesList');
@@ -271,18 +234,6 @@
         cookiesList.appendChild(cookieDiv);
       };
     
-      passwordForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const enteredPassword = passwordInput.value.trim();
-        if (enteredPassword === 'LPGPDRDS') {
-          passwordSection.style.display = 'none';
-          cookieJar.style.display = 'block';
-          loadCookies();
-        } else {
-          alert('Incorrect password!');
-        }
-      });
-    
       cookieForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newCookie = cookieInput.value.trim();
@@ -293,11 +244,7 @@
         }
       });
     
-      togglePassword.addEventListener('click', () => {
-        const fieldType = passwordInput.type === 'password' ? 'text' : 'password';
-        passwordInput.type = fieldType;
-        togglePassword.textContent = fieldType === 'password' ? '👁️' : '🙈';
-      });
+      loadCookies();
     });
   </script>
 </body>
